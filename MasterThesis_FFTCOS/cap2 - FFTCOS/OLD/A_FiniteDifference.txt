@@ -1,0 +1,27 @@
+% FINITE DIFFERENCES TEST
+function c = getCumulantsByFiniteDifferences(u,t,r,q,varargin)
+    c = zeros(1,4);
+    i = complex(0,1);
+    iargument = i*u;
+    % Tolerance for finite differences
+    h = 1e-6;
+    % Get the characteristic function
+    % cf = @(u) getCharacteristicFunction(model,i*u,t,r,q,varargin); 
+    % Get the cumulant generating function
+    psi = @(u) log(getCharacteristicFunction(model,iargument,t,r,q,varargin));
+    % Quantities for finite difference
+    f = psi(0);
+    fh = psi(1.0*h);
+    f_h = psi(-1.0*h);
+    f2h = psi(2.0*h);
+    f_2h = psi(-2.0*h);
+    f3h = psi(3.0*h);
+    f_3h = psi(-3.0*h);
+    % First cumulant
+    c(1) = (fh - f_h) / (2.0 * h);
+    % Second cumulant
+    c(2) = (fh - 2.0*f + f_h) / h^2;
+    % High order cumulants
+    c(3) = 0.0;
+    c(4) = (f3h - 2.0*f2h + 4*f - f_h - 2.0*f_2h + f_3h) / (4.0 * h^4);
+end
